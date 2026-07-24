@@ -1,0 +1,2497 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ayman Nassef :: root@portfolio</title>
+  <meta name="description"
+    content="Ayman Nassef — Étudiant Ingénieur Cybersécurité, ENSA Marrakech. Portfolio interactif.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #060a08;
+      --bg-panel: #0d1712;
+      --bg-panel-2: #0a1310;
+      --green: #3dff7a;
+      --green-dim: #1f6b3d;
+      --green-dim2: #153a24;
+      --green-muted: #6f9c81;
+      --cyan: #5ff0ff;
+      --amber: #ffb627;
+      --magenta: #ff2e88;
+      --text: #c9f7d6;
+      --font-pixel: 'Press Start 2P', monospace;
+      --font-term: 'VT323', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-term);
+      font-size: 19px;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: var(--cyan);
+      text-decoration: none;
+      transition: color .2s ease;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: var(--font-pixel);
+      color: var(--green);
+      line-height: 1.6;
+    }
+
+    ::selection {
+      background: var(--green);
+      color: #000;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 3px;
+    }
+
+    /* ---------- background layers ---------- */
+    #matrix {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      opacity: .14;
+      pointer-events: none;
+    }
+
+    #network-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      opacity: .06;
+      pointer-events: none;
+    }
+
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      pointer-events: none;
+      background: repeating-linear-gradient(rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, .35) 3px, rgba(0, 0, 0, 0) 4px);
+      mix-blend-mode: multiply;
+      animation: flicker 10s infinite steps(60);
+    }
+
+    @keyframes flicker {
+
+      0%,
+      100% {
+        opacity: .92;
+      }
+
+      42% {
+        opacity: .92;
+      }
+
+      43% {
+        opacity: .78;
+      }
+
+      44% {
+        opacity: .92;
+      }
+
+      71% {
+        opacity: .92;
+      }
+
+      72% {
+        opacity: .75;
+      }
+
+      73% {
+        opacity: .92;
+      }
+    }
+
+    /* ---------- floating particles ---------- */
+    .hacker-particle {
+      position: fixed;
+      font-family: var(--font-term);
+      font-size: 12px;
+      color: var(--green);
+      opacity: 0;
+      pointer-events: none;
+      z-index: -1;
+      animation: floatParticle linear forwards;
+      text-shadow: 0 0 6px var(--green);
+    }
+
+    @keyframes floatParticle {
+      0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.5);
+      }
+
+      10% {
+        opacity: 0.6;
+        transform: translateY(-20px) scale(1);
+      }
+
+      90% {
+        opacity: 0.3;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-100vh) scale(0.3);
+      }
+    }
+
+    /* ---------- glitch screen flash ---------- */
+    .glitch-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .glitch-overlay.flash {
+      animation: glitchFlash 0.15s steps(3) 1;
+    }
+
+    @keyframes glitchFlash {
+      0% {
+        opacity: 0;
+        background: transparent;
+      }
+
+      25% {
+        opacity: 0.08;
+        background: var(--cyan);
+      }
+
+      50% {
+        opacity: 0;
+        background: transparent;
+      }
+
+      75% {
+        opacity: 0.12;
+        background: var(--magenta);
+      }
+
+      100% {
+        opacity: 0;
+        background: transparent;
+      }
+    }
+
+    /* ---------- data stream on panels ---------- */
+    .panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      animation: dataStream 4s linear infinite;
+      opacity: 0.4;
+    }
+
+    @keyframes dataStream {
+      0% {
+        left: -50%;
+      }
+
+      100% {
+        left: 150%;
+      }
+    }
+
+    /* ---------- cyber pulse ring on section titles ---------- */
+    .section-title.in-view::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px var(--green), 0 0 24px var(--green);
+      animation: pulseRing 2s ease-out infinite;
+    }
+
+    @keyframes pulseRing {
+      0% {
+        box-shadow: 0 0 4px var(--green), 0 0 8px var(--green);
+        transform: translateY(-50%) scale(1);
+      }
+
+      50% {
+        box-shadow: 0 0 16px var(--green), 0 0 32px var(--green), 0 0 48px rgba(61, 255, 122, 0.3);
+        transform: translateY(-50%) scale(1.4);
+      }
+
+      100% {
+        box-shadow: 0 0 4px var(--green), 0 0 8px var(--green);
+        transform: translateY(-50%) scale(1);
+      }
+    }
+
+    /* ---------- hex data rain on mission cards ---------- */
+    .mission-card::after {
+      content: attr(data-hex);
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-family: var(--font-term);
+      font-size: 10px;
+      color: var(--green-dim);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      letter-spacing: 1px;
+      line-height: 1.2;
+      text-align: right;
+      max-width: 100px;
+      word-break: break-all;
+      pointer-events: none;
+    }
+
+    .mission-card:hover::after {
+      opacity: 0.5;
+      animation: hexScroll 3s linear infinite;
+    }
+
+    @keyframes hexScroll {
+      0% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(-20px);
+      }
+    }
+
+    /* ---------- threat HUD overlay ---------- */
+    #threat-hud {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 55;
+      pointer-events: none;
+      font-family: var(--font-term);
+      font-size: 13px;
+      color: var(--green-dim);
+      text-align: right;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      text-shadow: 0 0 4px rgba(61, 255, 122, 0.3);
+    }
+
+    #threat-hud.visible {
+      opacity: 1;
+    }
+
+    #threat-hud .hud-line {
+      margin: 2px 0;
+      animation: hudFlicker 4s steps(1) infinite;
+    }
+
+    #threat-hud .hud-line:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+
+    #threat-hud .hud-line:nth-child(3) {
+      animation-delay: 1s;
+    }
+
+    #threat-hud .hud-line:nth-child(4) {
+      animation-delay: 1.5s;
+    }
+
+    @keyframes hudFlicker {
+
+      0%,
+      96% {
+        opacity: 0.7;
+      }
+
+      97% {
+        opacity: 0.2;
+      }
+
+      98% {
+        opacity: 0.8;
+      }
+
+      100% {
+        opacity: 0.7;
+      }
+    }
+
+    /* ---------- breach mode ---------- */
+    .breach-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .breach-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .breach-text {
+      font-family: var(--font-pixel);
+      font-size: clamp(1rem, 4vw, 2.4rem);
+      color: var(--magenta);
+      text-shadow: 0 0 20px var(--magenta), 0 0 40px var(--magenta), 0 0 80px rgba(255, 46, 136, 0.4);
+      animation: breachPulse 0.5s steps(2) infinite;
+      text-align: center;
+    }
+
+    .breach-sub {
+      font-family: var(--font-term);
+      font-size: 20px;
+      color: var(--cyan);
+      margin-top: 20px;
+      opacity: 0;
+      animation: breachFade 0.6s ease 0.8s forwards;
+    }
+
+    .breach-skull {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: skullBounce 0.6s ease infinite alternate;
+      filter: drop-shadow(0 0 20px var(--magenta));
+    }
+
+    @keyframes breachPulse {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.7;
+        transform: scale(1.02);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes breachFade {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes skullBounce {
+      0% {
+        transform: scale(1) rotate(-2deg);
+      }
+
+      100% {
+        transform: scale(1.1) rotate(2deg);
+      }
+    }
+
+    /* ---------- cursor trail ---------- */
+    .cursor-trail {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: var(--green);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 55;
+      opacity: 0.8;
+      box-shadow: 0 0 6px var(--green), 0 0 12px var(--green);
+      transition: opacity 0.3s ease;
+    }
+
+    /* ---------- typing indicator for terminal ---------- */
+    .terminal-activity {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .terminal-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green-dim);
+      animation: termDot 1.5s ease infinite;
+    }
+
+    .terminal-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .terminal-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    .terminal-dot.active {
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    @keyframes termDot {
+
+      0%,
+      100% {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    /* ---------- skill bar animated glow ---------- */
+    .skill-fill,
+    .lang-fill,
+    .xp-fill {
+      position: relative;
+    }
+
+    .skill-fill::after,
+    .lang-fill::after,
+    .xp-fill::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green), 0 0 16px var(--green);
+      animation: barGlow 1.5s ease infinite;
+    }
+
+    @keyframes barGlow {
+
+      0%,
+      100% {
+        opacity: 0.5;
+      }
+
+      50% {
+        opacity: 1;
+        box-shadow: 0 0 12px var(--green), 0 0 24px var(--green);
+      }
+    }
+
+    /* ---------- badge scan effect ---------- */
+    .badge::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(61, 255, 122, 0.08), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .badge {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .badge:hover::before {
+      left: 100%;
+    }
+
+    /* ---------- achievement unlock animation ---------- */
+    .ach.in-view .ach-icon {
+      animation: achieveUnlock 0.8s ease forwards;
+    }
+
+    @keyframes achieveUnlock {
+      0% {
+        transform: scale(0.5) rotate(-10deg);
+        opacity: 0;
+      }
+
+      50% {
+        transform: scale(1.2) rotate(5deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    /* ---------- nav active indicator with glow ---------- */
+    .nav-links a.active {
+      color: var(--green);
+    }
+
+    .nav-links a.active::after {
+      width: 100%;
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    /* ---------- boot screen ---------- */
+    #boot {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      color: var(--green);
+      font-family: var(--font-term);
+      font-size: 22px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6vw;
+      cursor: pointer;
+      transition: opacity .6s ease;
+    }
+
+    #boot-text {
+      white-space: pre-wrap;
+      margin: 0;
+      min-height: 40vh;
+    }
+
+    .boot-skip {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      font-size: 14px;
+      color: var(--green-muted);
+    }
+
+    #boot.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* boot progress bar */
+    .boot-progress {
+      width: 60%;
+      max-width: 500px;
+      height: 8px;
+      border: 1px solid var(--green-dim);
+      margin-top: 20px;
+      background: #080f0b;
+    }
+
+    .boot-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--green-dim), var(--green));
+      transition: width 0.3s steps(6);
+    }
+
+    /* ---------- toast ---------- */
+    .toast {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translate(-50%, -140%);
+      background: var(--bg-panel);
+      border: 2px solid var(--magenta);
+      color: var(--magenta);
+      font-family: var(--font-pixel);
+      font-size: 11px;
+      padding: 14px 18px;
+      z-index: 200;
+      transition: transform .4s steps(8);
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      transform: translate(-50%, 0);
+    }
+
+    /* ---------- layout / panel ---------- */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 70px 20px 60px;
+      opacity: 0;
+      transition: opacity .8s ease;
+    }
+
+    main.revealed {
+      opacity: 1;
+    }
+
+    .section {
+      padding: 70px 0;
+    }
+
+    .section-title {
+      font-size: 15px;
+      letter-spacing: 1px;
+      margin-bottom: 28px;
+      position: relative;
+      padding-bottom: 12px;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 40px;
+      height: 3px;
+      background: var(--green-dim);
+      transition: width .6s ease .15s, background-color .6s ease .15s;
+    }
+
+    .section-title.in-view::after {
+      width: 120px;
+      background: var(--green);
+    }
+
+    .panel {
+      position: relative;
+      background: var(--bg-panel);
+      border: 2px solid var(--green-dim);
+      clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+      padding: 22px;
+      box-shadow: 0 0 24px rgba(61, 255, 122, .05), inset 0 0 0 1px rgba(61, 255, 122, .05);
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      overflow: hidden;
+    }
+
+    /* ---------- reveal-on-scroll system ---------- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mission-grid .reveal:nth-child(1) {
+      transition-delay: 0ms;
+    }
+
+    .mission-grid .reveal:nth-child(2) {
+      transition-delay: 90ms;
+    }
+
+    .mission-grid .reveal:nth-child(3) {
+      transition-delay: 180ms;
+    }
+
+    .mission-grid .reveal:nth-child(4) {
+      transition-delay: 270ms;
+    }
+
+    .arsenal-grid .reveal:nth-child(1) {
+      transition-delay: 0ms;
+    }
+
+    .arsenal-grid .reveal:nth-child(2) {
+      transition-delay: 70ms;
+    }
+
+    .arsenal-grid .reveal:nth-child(3) {
+      transition-delay: 140ms;
+    }
+
+    .arsenal-grid .reveal:nth-child(4) {
+      transition-delay: 210ms;
+    }
+
+    .arsenal-grid .reveal:nth-child(5) {
+      transition-delay: 280ms;
+    }
+
+    .arsenal-grid .reveal:nth-child(6) {
+      transition-delay: 350ms;
+    }
+
+    .achievements-grid .reveal:nth-child(1) {
+      transition-delay: 0ms;
+    }
+
+    .achievements-grid .reveal:nth-child(2) {
+      transition-delay: 70ms;
+    }
+
+    .achievements-grid .reveal:nth-child(3) {
+      transition-delay: 140ms;
+    }
+
+    .achievements-grid .reveal:nth-child(4) {
+      transition-delay: 210ms;
+    }
+
+    .achievements-grid .reveal:nth-child(5) {
+      transition-delay: 280ms;
+    }
+
+    .achievements-grid .reveal:nth-child(6) {
+      transition-delay: 350ms;
+    }
+
+    /* ---------- hover lift for interactive panels ---------- */
+    .mission-card:hover,
+    .arsenal-group:hover,
+    .ach:hover {
+      transform: translateY(-5px);
+      border-color: var(--green);
+      box-shadow: 0 8px 28px rgba(61, 255, 122, .14), inset 0 0 0 1px rgba(61, 255, 122, .1);
+    }
+
+    .contact-item {
+      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+    }
+
+    .contact-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--green);
+      box-shadow: 0 6px 20px rgba(61, 255, 122, .14);
+    }
+
+    .badge {
+      transition: color .2s ease, border-color .2s ease, transform .2s ease;
+    }
+
+    .badge:hover {
+      color: var(--green);
+      border-color: var(--green);
+      transform: translateY(-2px);
+    }
+
+    .tag {
+      transition: transform .2s ease, background-color .2s ease;
+    }
+
+    .tag:hover {
+      background: rgba(95, 240, 255, .1);
+      transform: translateY(-2px);
+    }
+
+    /* ---------- navbar ---------- */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 90;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 30px;
+      flex-wrap: wrap;
+      gap: 14px;
+      background: rgba(6, 10, 8, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--green-dim2);
+      transition: background 0.3s ease;
+    }
+
+    .nav-logo {
+      font-family: var(--font-pixel);
+      font-size: 13px;
+      color: var(--green);
+    }
+
+    .blink {
+      animation: blink 1s steps(1) infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 18px;
+      margin: 0;
+      padding: 0;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      position: relative;
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--green-muted);
+      padding: 6px 2px;
+      transition: color .2s ease;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 2px;
+      width: 0;
+      height: 2px;
+      background: var(--green);
+      transition: width .25s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--green);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      padding-top: 20px;
+    }
+
+    .hero-item {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+
+    main.revealed .hero-item {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-item:nth-child(1) {
+      transition-delay: .05s;
+    }
+
+    .hero-item:nth-child(2) {
+      transition-delay: .15s;
+    }
+
+    .hero-item:nth-child(3) {
+      transition-delay: .25s;
+    }
+
+    .hero-item:nth-child(4) {
+      transition-delay: .35s;
+    }
+
+    .hero-item:nth-child(5) {
+      transition-delay: .45s;
+    }
+
+    .hero-item:nth-child(6) {
+      transition-delay: .55s;
+    }
+
+    .hero-item:nth-child(7) {
+      transition-delay: .65s;
+    }
+
+    .quest-banner {
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--amber);
+      border: 2px dashed var(--amber);
+      padding: 10px 14px;
+      display: inline-block;
+      margin-bottom: 26px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      50% {
+        opacity: .55;
+      }
+    }
+
+    .glitch {
+      position: relative;
+      font-size: clamp(1.5rem, 5.5vw, 2.6rem);
+      margin: 0 0 10px;
+      letter-spacing: 1px;
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .glitch::before {
+      color: var(--cyan);
+      clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+      animation: glitch-a 3.4s infinite linear alternate-reverse;
+    }
+
+    .glitch::after {
+      color: var(--magenta);
+      clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+      animation: glitch-b 2.7s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch-a {
+      0% {
+        transform: translate(0, 0);
+      }
+
+      20% {
+        transform: translate(-2px, 1px);
+      }
+
+      40% {
+        transform: translate(2px, -1px);
+      }
+
+      60% {
+        transform: translate(-1px, 2px);
+      }
+
+      80% {
+        transform: translate(1px, -1px);
+      }
+
+      100% {
+        transform: translate(0, 0);
+      }
+    }
+
+    @keyframes glitch-b {
+      0% {
+        transform: translate(0, 0);
+      }
+
+      25% {
+        transform: translate(2px, -1px);
+      }
+
+      50% {
+        transform: translate(-2px, 1px);
+      }
+
+      75% {
+        transform: translate(1px, 1px);
+      }
+
+      100% {
+        transform: translate(0, 0);
+      }
+    }
+
+    .hero-role {
+      color: var(--cyan);
+      font-size: 20px;
+      margin: 6px 0 2px;
+    }
+
+    .hero-sub {
+      color: var(--green-muted);
+      margin: 0 0 20px;
+      font-size: 18px;
+    }
+
+    .hero-bio {
+      max-width: 640px;
+      min-height: 5.4em;
+      color: var(--text);
+    }
+
+    .hero-bio::after {
+      content: "▌";
+      color: var(--green);
+      animation: blink 1s steps(1) infinite;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 24px 0 40px;
+    }
+
+    /* ---------- buttons ---------- */
+    .btn {
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--green);
+      background: transparent;
+      border: 2px solid var(--green-dim);
+      padding: 12px 16px;
+      display: inline-block;
+      cursor: pointer;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+      transition: background .18s ease, color .18s ease, transform .18s ease, border-color .18s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(61, 255, 122, 0.15), transparent);
+      transition: left 0.4s ease;
+    }
+
+    .btn:hover::after {
+      left: 100%;
+    }
+
+    .btn:hover {
+      background: var(--green);
+      color: #000;
+      transform: translateY(-2px);
+      border-color: var(--green);
+    }
+
+    .btn-primary {
+      border-color: var(--green);
+    }
+
+    /* ---------- terminal ---------- */
+    .terminal {
+      max-width: 640px;
+    }
+
+    .terminal-head {
+      color: var(--green-muted);
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+
+    .term-hint {
+      color: var(--amber);
+    }
+
+    .term-output {
+      height: 180px;
+      overflow-y: auto;
+      font-size: 17px;
+      margin-bottom: 10px;
+    }
+
+    .term-output p {
+      margin: 2px 0;
+    }
+
+    .term-output .cmd {
+      color: var(--cyan);
+    }
+
+    .term-output .err {
+      color: var(--magenta);
+    }
+
+    @keyframes termFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .term-line {
+      animation: termFadeIn .25s ease;
+    }
+
+    .term-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-top: 1px solid var(--green-dim2);
+      padding-top: 10px;
+    }
+
+    .prompt {
+      color: var(--green);
+    }
+
+    #term-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--green);
+      font-family: var(--font-term);
+      font-size: 18px;
+      outline: none;
+    }
+
+    /* ---------- stats ---------- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card.wide {
+      grid-column: 1/-1;
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      margin-bottom: 12px;
+    }
+
+    .stat-level {
+      color: var(--amber);
+    }
+
+    .xp-bar,
+    .skill-bar,
+    .lang-bar {
+      height: 14px;
+      background: #08130c;
+      border: 1px solid var(--green-dim);
+      margin-bottom: 6px;
+    }
+
+    .xp-fill,
+    .skill-fill,
+    .lang-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--green-dim), var(--green));
+      transition: width 1.1s steps(18);
+    }
+
+    .xp-label {
+      color: var(--green-muted);
+      font-size: 15px;
+      margin: 0;
+    }
+
+    .stat-card.in-view .xp-fill {
+      width: 45%;
+    }
+
+    .skill-row {
+      margin-bottom: 16px;
+    }
+
+    .skill-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .skill-name {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .skill-name span:last-child {
+      color: var(--green-muted);
+    }
+
+    .quest-log h3 {
+      font-size: 12px;
+      margin-top: 0;
+    }
+
+    .timeline {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .timeline li {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--green-dim2);
+      font-size: 17px;
+      transition: padding-left .2s ease;
+    }
+
+    .timeline li:hover {
+      padding-left: 8px;
+    }
+
+    .timeline li:last-child {
+      border-bottom: none;
+    }
+
+    .t-date {
+      color: var(--green-muted);
+      min-width: 130px;
+    }
+
+    .t-name {
+      flex: 1;
+      color: var(--text);
+    }
+
+    .t-status {
+      font-family: var(--font-pixel);
+      font-size: 9px;
+      color: var(--amber);
+    }
+
+    /* ---------- missions ---------- */
+    .mission-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+    }
+
+    .mission-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mission-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+
+    .mission-title {
+      font-family: var(--font-pixel);
+      font-size: 11px;
+      color: var(--green);
+      line-height: 1.6;
+    }
+
+    .diff {
+      font-family: var(--font-pixel);
+      font-size: 8px;
+      padding: 5px 7px;
+      white-space: nowrap;
+    }
+
+    .diff-hard {
+      color: var(--magenta);
+      border: 1px solid var(--magenta);
+    }
+
+    .diff-medium {
+      color: var(--amber);
+      border: 1px solid var(--amber);
+    }
+
+    .mission-card ul {
+      margin: 0 0 14px;
+      padding-left: 18px;
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    .mission-card li {
+      margin-bottom: 6px;
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: 12px;
+      font-family: var(--font-pixel);
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+      padding: 4px 6px;
+    }
+
+    .stamp {
+      position: absolute;
+      top: 14px;
+      right: -30px;
+      transform: rotate(35deg);
+      font-family: var(--font-pixel);
+      font-size: 9px;
+      color: var(--green);
+      border: 2px solid var(--green);
+      padding: 4px 34px;
+      opacity: .55;
+      transition: opacity .25s ease;
+    }
+
+    .mission-card:hover .stamp {
+      opacity: .9;
+    }
+
+    /* ---------- arsenal ---------- */
+    .arsenal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .arsenal-group h3 {
+      font-size: 11px;
+      margin: 0 0 12px;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      font-size: 15px;
+      border: 1px solid var(--green-dim);
+      padding: 6px 10px;
+      color: var(--text);
+    }
+
+    /* ---------- achievements ---------- */
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .ach {
+      text-align: center;
+    }
+
+    .ach-icon {
+      font-family: var(--font-pixel);
+      font-size: 22px;
+      color: var(--amber);
+      margin-bottom: 10px;
+      transition: transform .25s ease;
+    }
+
+    .ach:hover .ach-icon {
+      transform: scale(1.15) rotate(-4deg);
+    }
+
+    .ach-name {
+      font-size: 16px;
+      color: var(--text);
+      margin: 0 0 4px;
+    }
+
+    .ach-tag {
+      font-family: var(--font-pixel);
+      font-size: 8px;
+      color: var(--green);
+    }
+
+    .rootme-score {
+      font-family: var(--font-pixel);
+      font-size: 20px;
+      color: var(--amber);
+      margin: 4px 0;
+    }
+
+    .lang-panel h3 {
+      font-size: 11px;
+      margin-top: 0;
+    }
+
+    .lang-row {
+      margin-bottom: 14px;
+    }
+
+    .lang-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .lang-name {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    /* ---------- contact ---------- */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .contact-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 14px;
+      border: 1px solid var(--green-dim);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* contact item scan line */
+    .contact-item::before {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      animation: contactScan 3s linear infinite;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .contact-item:hover::before {
+      opacity: 0.6;
+    }
+
+    @keyframes contactScan {
+      0% {
+        top: -5%;
+      }
+
+      100% {
+        top: 105%;
+      }
+    }
+
+    .contact-item .k {
+      font-family: var(--font-pixel);
+      font-size: 9px;
+      color: var(--green-muted);
+    }
+
+    .contact-item .v {
+      font-size: 17px;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .contact-item a.v {
+      color: var(--cyan);
+    }
+
+    .contact-item a.v:hover {
+      color: var(--green);
+    }
+
+    /* ---------- footer ---------- */
+    .footer {
+      padding: 40px 0 10px;
+      color: var(--green-muted);
+      font-size: 15px;
+      text-align: center;
+    }
+
+    .konami-hint {
+      opacity: .6;
+      font-size: 13px;
+    }
+
+    /* ---------- packet sniffer animation ---------- */
+    .packet-sniffer {
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      font-family: var(--font-term);
+      font-size: 11px;
+      color: var(--green-dim);
+      z-index: 55;
+      pointer-events: none;
+      max-width: 300px;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      text-shadow: 0 0 3px rgba(61, 255, 122, 0.2);
+    }
+
+    .packet-sniffer.visible {
+      opacity: 0.6;
+    }
+
+    .packet-line {
+      margin: 1px 0;
+      animation: packetFade 0.3s ease;
+    }
+
+    @keyframes packetFade {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* ---------- cyber grid background pattern ---------- */
+    .cyber-grid {
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      background-image:
+        linear-gradient(rgba(61, 255, 122, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(61, 255, 122, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      animation: gridPulse 8s ease infinite;
+    }
+
+    @keyframes gridPulse {
+
+      0%,
+      100% {
+        opacity: 0.4;
+      }
+
+      50% {
+        opacity: 0.8;
+      }
+    }
+
+    @media (max-width:640px) {
+      body {
+        font-size: 17px;
+      }
+
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 16px;
+      }
+
+      .terminal {
+        max-width: 100%;
+      }
+
+      .packet-sniffer,
+      #threat-hud {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .reveal,
+      .hero-item {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Background layers -->
+  <div class="cyber-grid" aria-hidden="true"></div>
+  <canvas id="matrix"></canvas>
+  <canvas id="network-canvas"></canvas>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="glitch-overlay" id="glitch-overlay" aria-hidden="true"></div>
+  <div id="toast" class="toast" role="status"></div>
+
+  <!-- Threat HUD -->
+  <div id="threat-hud">
+    <div class="hud-line">SHIELD: ACTIVE</div>
+    <div class="hud-line">THREATS: <span id="hud-threats">0</span></div>
+    <div class="hud-line">UPTIME: <span id="hud-uptime">00:00</span></div>
+    <div class="hud-line">PACKETS: <span id="hud-packets">0</span></div>
+  </div>
+
+  <!-- Packet Sniffer -->
+  <div class="packet-sniffer" id="packet-sniffer"></div>
+
+  <!-- Breach Overlay -->
+  <div class="breach-overlay" id="breach-overlay">
+    <div class="breach-skull">💀</div>
+    <div class="breach-text">⚠ BREACH DETECTED ⚠</div>
+    <div class="breach-sub">CHEAT CODE ACTIVATED :: +999 XP — FIREWALL BYPASSED</div>
+  </div>
+
+  <div id="boot" role="status" aria-live="polite">
+    <pre id="boot-text"></pre>
+    <div class="boot-progress">
+      <div class="boot-progress-fill" id="boot-progress-fill"></div>
+    </div>
+    <div class="boot-skip">[ cliquer ou appuyer sur une touche pour passer ]</div>
+  </div>
+
+  <main id="main">
+
+    <nav class="navbar">
+      <div class="nav-logo">AYMAN_NASSEF<span class="blink">_</span></div>
+      <ul class="nav-links">
+        <li><a href="#home">HOME</a></li>
+        <li><a href="#stats">STATS</a></li>
+        <li><a href="#missions">MISSIONS</a></li>
+        <li><a href="#arsenal">ARSENAL</a></li>
+        <li><a href="#achievements">ACHIEVEMENTS</a></li>
+        <li><a href="#contact">TRANSMIT</a></li>
+      </ul>
+    </nav>
+
+    <section id="home" class="hero">
+      <div class="quest-banner hero-item">⚡ QUÊTE DISPONIBLE : Completing my studies ⚡</div>
+      <h1 class="glitch hero-item" data-text="AYMAN NASSEF">AYMAN NASSEF</h1>
+      <p class="hero-role hero-item">// ÉTUDIANT INGÉNIEUR — CYBERSÉCURITÉ</p>
+      <p class="hero-sub hero-item">Génie Cyber-Défense &amp; Systèmes de Télécommunications Embarqués — ENSA Marrakech
+      </p>
+      <p class="hero-bio hero-item" id="typewriter"></p>
+
+      <div class="hero-cta hero-item">
+        <a class="btn btn-primary" href="mailto:aymannassef65@gmail.com">[ ENVOYER UN MESSAGE ]</a>
+        <a class="btn" href="#missions">[ VOIR LES MISSIONS ]</a>
+      </div>
+
+      <div class="terminal panel hero-item">
+        <div class="terminal-activity">
+          <div class="terminal-dot" id="td1"></div>
+          <div class="terminal-dot" id="td2"></div>
+          <div class="terminal-dot" id="td3"></div>
+        </div>
+        <div class="terminal-head">root@ayman-nassef:~$ <span class="term-hint">tapez 'help' pour commencer</span></div>
+        <div id="term-output" class="term-output"></div>
+        <div class="term-input-row">
+          <span class="prompt">$</span>
+          <input id="term-input" type="text" autocomplete="off" spellcheck="false" aria-label="Terminal de commandes" />
+        </div>
+      </div>
+    </section>
+
+    <section id="stats" class="section">
+      <h2 class="section-title reveal">// CHARACTER STATS</h2>
+      <div class="stats-grid">
+        <div class="panel stat-card wide reveal" id="xp-card">
+          <div class="stat-header">
+            <span>CLASSE : Cyber-Défense Engineer</span>
+            <span class="stat-level">LVL 2</span>
+          </div>
+          <div class="xp-bar">
+            <div class="xp-fill"></div>
+          </div>
+          <p class="xp-label">Progression — Cycle Ingénieur, Année 1/3</p>
+        </div>
+
+        <div class="panel stat-card reveal" id="skill-card">
+          <div class="skill-row">
+            <div class="skill-name"><span>Sécurité</span><span>80%</span></div>
+            <div class="skill-bar">
+              <div class="skill-fill" style="--pct:80%"></div>
+            </div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-name"><span>Systèmes</span><span>75%</span></div>
+            <div class="skill-bar">
+              <div class="skill-fill" style="--pct:75%"></div>
+            </div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-name"><span>Réseaux</span><span>70%</span></div>
+            <div class="skill-bar">
+              <div class="skill-fill" style="--pct:70%"></div>
+            </div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-name"><span>Programmation</span><span>55%</span></div>
+            <div class="skill-bar">
+              <div class="skill-fill" style="--pct:55%"></div>
+            </div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-name"><span>Outils</span><span>75%</span></div>
+            <div class="skill-bar">
+              <div class="skill-fill" style="--pct:75%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel quest-log reveal">
+        <h3>QUEST LOG :: FORMATIONS</h3>
+        <ul class="timeline">
+          <li><span class="t-date">2023 — 2025</span><span class="t-name">Classes Préparatoires Intégrées — ENSA
+              Marrakech</span><span class="t-status">COMPLETED</span></li>
+          <li><span class="t-date">2025 — Présent</span><span class="t-name">Cycle Ingénieur en Cybersécurité — ENSA
+              Marrakech</span><span class="t-status">IN PROGRESS</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="missions" class="section">
+      <h2 class="section-title reveal">// MISSIONS COMPLETED</h2>
+      <div class="mission-grid">
+
+        <div class="panel mission-card reveal" data-hex="4F 70 65 6E 53 49 45 4D">
+          <span class="stamp">DONE</span>
+          <div class="mission-top">
+            <span class="mission-title">OPEN-SOURCE SIEM :: PYTHON</span>
+            <span class="diff diff-hard">HARD</span>
+          </div>
+          <ul>
+            <li>Outil SIEM d'analyse de logs en temps réel dédié à la détection d'intrusions et à la gestion automatisée
+              des alertes.</li>
+            <li>Surveillance de l'intégrité des fichiers (FIM) en temps réel avec Python/Watchdog.</li>
+            <li>Base de données + site web pour la visualisation et l'analyse des logs suspects.</li>
+          </ul>
+          <div class="tags"><span class="tag">Python</span><span class="tag">Watchdog</span><span
+              class="tag">DB</span><span class="tag">Web</span></div>
+        </div>
+
+        <div class="panel mission-card reveal" data-hex="5A 61 62 62 69 78 4E 65 74">
+          <span class="stamp">DONE</span>
+          <div class="mission-top">
+            <span class="mission-title">SUPERVISION RÉSEAU :: ZABBIX</span>
+            <span class="diff diff-medium">MEDIUM</span>
+          </div>
+          <ul>
+            <li>Gestion d'alertes automatisées et disponibilité des infrastructures avec Zabbix.</li>
+            <li>Configuration d'agents multi-OS (Ubuntu, Kali, Windows 10).</li>
+            <li>Collecte de métriques (CPU, RAM, trafic réseau).</li>
+          </ul>
+          <div class="tags"><span class="tag">Zabbix</span><span class="tag">Linux</span><span class="tag">Windows
+              Server</span></div>
+        </div>
+
+        <div class="panel mission-card reveal" data-hex="54 6B 42 61 6E 6B 41 70 70">
+          <span class="stamp">DONE</span>
+          <div class="mission-top">
+            <span class="mission-title">APP BANCAIRE :: TKINTER</span>
+            <span class="diff diff-medium">MEDIUM</span>
+          </div>
+          <ul>
+            <li>Application bancaire par Tkinter (Python) pour la gestion des transactions et le suivi de solde.</li>
+          </ul>
+          <div class="tags"><span class="tag">Python</span><span class="tag">Tkinter</span></div>
+        </div>
+
+        <div class="panel mission-card reveal" data-hex="45 53 69 67 6E 43 72 79 70">
+          <span class="stamp">DONE</span>
+          <div class="mission-top">
+            <span class="mission-title">E-SIGN :: CRYPTO</span>
+            <span class="diff diff-hard">HARD</span>
+          </div>
+          <ul>
+            <li>Système de signature électronique (E-sign) avec notions de cryptographie et sécurité des bases de
+              données.</li>
+          </ul>
+          <div class="tags"><span class="tag">Cryptographie</span><span class="tag">Bases de données</span></div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="arsenal" class="section">
+      <h2 class="section-title reveal">// ARSENAL</h2>
+      <div class="arsenal-grid">
+        <div class="panel arsenal-group reveal">
+          <h3>SÉCURITÉ</h3>
+          <div class="badge-row">
+            <span class="badge">Zabbix</span><span class="badge">Splunk</span><span class="badge">Elastic</span><span
+              class="badge">Sécurité offensive</span>
+          </div>
+        </div>
+        <div class="panel arsenal-group reveal">
+          <h3>SYSTÈMES</h3>
+          <div class="badge-row">
+            <span class="badge">Linux (Kali)</span><span class="badge">Linux (Ubuntu)</span><span class="badge">Windows
+              Server</span><span class="badge">Virtualisation</span>
+          </div>
+        </div>
+        <div class="panel arsenal-group reveal">
+          <h3>RÉSEAUX</h3>
+          <div class="badge-row">
+            <span class="badge">TCP/IP</span><span class="badge">DHCP</span><span class="badge">SSH</span><span
+              class="badge">DNS</span><span class="badge">HTTP</span>
+          </div>
+        </div>
+        <div class="panel arsenal-group reveal">
+          <h3>PROGRAMMATION</h3>
+          <div class="badge-row">
+            <span class="badge">Python (bases)</span><span class="badge">HTML</span><span class="badge">CSS</span><span
+              class="badge">JavaScript</span><span class="badge">PHP</span>
+          </div>
+        </div>
+        <div class="panel arsenal-group reveal">
+          <h3>OUTILS</h3>
+          <div class="badge-row">
+            <span class="badge">Nmap</span><span class="badge">Wireshark</span><span class="badge">Burp Suite</span>
+          </div>
+        </div>
+        <div class="panel arsenal-group reveal">
+          <h3>CTF PLAYER</h3>
+          <div class="badge-row">
+            <span class="badge">Midnight</span><span class="badge">Davinci</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="achievements" class="section">
+      <h2 class="section-title reveal">// ACHIEVEMENTS UNLOCKED</h2>
+      <div class="achievements-grid">
+        <div class="panel ach reveal">
+          <div class="ach-icon">☐☑</div>
+          <p class="ach-name">TryHackMe — Pre Security</p>
+          <p class="ach-tag">UNLOCKED</p>
+        </div>
+        <div class="panel ach reveal">
+          <div class="ach-icon">☐☑</div>
+          <p class="ach-name">TryHackMe — AI Security</p>
+          <p class="ach-tag">UNLOCKED</p>
+        </div>
+        <div class="panel ach reveal">
+          <div class="ach-icon">☐☑</div>
+          <p class="ach-name">TryHackMe — Security 101</p>
+          <p class="ach-tag">UNLOCKED</p>
+        </div>
+        <div class="panel ach reveal">
+          <div class="ach-icon">☐☑</div>
+          <p class="ach-name">TryHackMe — SOC Level 1</p>
+          <p class="ach-tag">UNLOCKED</p>
+        </div>
+        <div class="panel ach reveal">
+          <div class="ach-icon">☐☑</div>
+          <p class="ach-name">Coursera — Foundations of Cybersecurity (Google)</p>
+          <p class="ach-tag">UNLOCKED</p>
+        </div>
+        <div class="panel ach reveal">
+          <div class="ach-icon">★</div>
+          <p class="ach-name">Root-Me</p>
+          <p class="rootme-score">1200+ PTS</p>
+          <p class="ach-tag">RÉSEAU · WEB · STÉGANOGRAPHIE</p>
+        </div>
+      </div>
+
+      <div class="panel lang-panel reveal">
+        <h3>LANGUAGE PACKS INSTALLED</h3>
+        <div class="lang-row">
+          <div class="lang-name"><span>Arabe</span><span>Langue maternelle</span></div>
+          <div class="lang-bar">
+            <div class="lang-fill" style="--pct:100%"></div>
+          </div>
+        </div>
+        <div class="lang-row">
+          <div class="lang-name"><span>Français</span><span>Maîtrise professionnelle</span></div>
+          <div class="lang-bar">
+            <div class="lang-fill" style="--pct:80%"></div>
+          </div>
+        </div>
+        <div class="lang-row">
+          <div class="lang-name"><span>Anglais</span><span>B2 (technique)</span></div>
+          <div class="lang-bar">
+            <div class="lang-fill" style="--pct:85%"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <h2 class="section-title reveal">// TRANSMIT</h2>
+      <div class="panel contact-panel reveal">
+        <p>Prêt à transmettre un signal ? Choisissez un canal :</p>
+        <div class="contact-grid">
+          <div class="contact-item">
+            <span class="k">MAIL</span>
+            <a class="v" href="mailto:aymannassef65@gmail.com">aymannassef65@gmail.com</a>
+          </div>
+          <div class="contact-item">
+            <span class="k">TEL</span>
+            <a class="v" href="tel:+212706622147">07 06 62 21 47</a>
+          </div>
+          <div class="contact-item">
+            <span class="k">LINKEDIN</span>
+            <a class="v" href="https://www.linkedin.com/in/ayman-nassef-3b5359387" target="_blank"
+              rel="noopener">ayman-nassef</a>
+          </div>
+          <div class="contact-item">
+            <span class="k">GITHUB</span>
+            <a class="v" href="https://www.github.com/AymanNassef65" target="_blank" rel="noopener">AymanNassef65</a>
+          </div>
+          <div class="contact-item">
+            <span class="k">ROOT-ME</span>
+            <a class="v" href="https://www.root-me.org/AymanNassef65" target="_blank" rel="noopener">AymanNassef65</a>
+          </div>
+          <div class="contact-item">
+            <span class="k">LOCATION</span>
+            <span class="v">Casablanca, Maroc</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>&gt; SYSTEM.LOG :: build with curiosity and love by Ayman Nassef :)</p>
+      <p class="konami-hint">Psst... essayez le Konami Code.</p>
+    </footer>
+
+  </main>
+
+  <script>
+    /* ================================================
+       ORIGINAL FEATURES — PRESERVED
+       ================================================ */
+
+    /* ---------------- Matrix rain ---------------- */
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    let w, h, cols, drops;
+    const chars = 'アイウエオカキクケコサシスセソ0123456789ABCDEF$#&%01';
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      cols = Math.floor(w / 16);
+      drops = new Array(cols).fill(0).map(() => Math.random() * -50);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(6,10,8,0.08)';
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#3dff7a';
+      ctx.font = '14px monospace';
+      for (let i = 0; i < cols; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * 16, drops[i] * 16);
+        if (drops[i] * 16 > h && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion) setInterval(drawMatrix, 55);
+
+    /* ---------------- Boot sequence (enhanced with progress bar) ---------------- */
+    const bootLines = [
+      'BIOS v4.20 — INITIALISATION DU SYSTÈME...',
+      'Chargement du noyau CYBERDEF_OS...',
+      'Montage de /home/ayman-nassef ...',
+      '[OK] Module réseau chargé — eth0 UP',
+      '[OK] Firewall IDS/IPS initialisé...',
+      'Scan des vulnérabilités... AUCUNE MENACE DÉTECTÉE',
+      'Chargement des clés SSH... OK',
+      'Vérification intégrité : sha256sum... PASSED',
+      'Chargement du profil : AYMAN_NASSEF.exe',
+      'Authentification biométrique... OK',
+      '> ACCESS GRANTED'
+    ];
+    const bootTextEl = document.getElementById('boot-text');
+    const bootEl = document.getElementById('boot');
+    const mainEl = document.getElementById('main');
+    const bootProgressFill = document.getElementById('boot-progress-fill');
+    let bootDone = false;
+
+    function typeLine(lineIndex, charIndex, callback) {
+      if (lineIndex >= bootLines.length) { callback(); return; }
+      const line = bootLines[lineIndex];
+      // Update progress bar
+      const progress = ((lineIndex + 1) / bootLines.length) * 100;
+      bootProgressFill.style.width = progress + '%';
+
+      if (charIndex <= line.length) {
+        const soFar = bootLines.slice(0, lineIndex).join('\n');
+        bootTextEl.textContent = (soFar ? soFar + '\n' : '') + line.slice(0, charIndex);
+        setTimeout(() => typeLine(lineIndex, charIndex + 1, callback), reduceMotion ? 0 : 12);
+      } else {
+        setTimeout(() => typeLine(lineIndex + 1, 0, callback), reduceMotion ? 0 : 120);
+      }
+    }
+
+    function finishBoot() {
+      if (bootDone) return;
+      bootDone = true;
+      bootProgressFill.style.width = '100%';
+      bootEl.classList.add('hidden');
+      mainEl.classList.add('revealed');
+      startTypewriter();
+      startHackingAnimations();
+      setTimeout(() => { bootEl.style.display = 'none'; }, 650);
+    }
+
+    if (reduceMotion) {
+      finishBoot();
+    } else {
+      typeLine(0, 0, () => setTimeout(finishBoot, 500));
+    }
+    bootEl.addEventListener('click', finishBoot);
+    window.addEventListener('keydown', function skipOnce(e) { finishBoot(); window.removeEventListener('keydown', skipOnce); }, { once: true });
+
+    /* ---------------- Hero typewriter ---------------- */
+    const bioText = "Futur ingénieur en cybersécurité, je mobilise des compétences techniques en administration systèmes, réseaux et langages de programmation. Je participe activement aux compétitions CTF (Midnight, Davinci) et suis toujours ouvert à l'apprentissage de nouvelles technologies.";
+    const twEl = document.getElementById('typewriter');
+    function startTypewriter() {
+      if (reduceMotion) { twEl.textContent = bioText; return; }
+      let i = 0;
+      (function step() {
+        twEl.textContent = bioText.slice(0, i);
+        i++;
+        if (i <= bioText.length) setTimeout(step, 12);
+      })();
+    }
+
+    /* ---------------- Scroll reveal ---------------- */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, { threshold: 0.25 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ---------------- Skill bar fill on scroll ---------------- */
+    const skillObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.skill-fill, .lang-fill').forEach(bar => {
+            bar.style.width = bar.style.getPropertyValue('--pct');
+          });
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('#skill-card, .lang-panel').forEach(el => skillObserver.observe(el));
+
+    /* ---------------- Terminal ---------------- */
+    const termOutput = document.getElementById('term-output');
+    const termInput = document.getElementById('term-input');
+    const history = [];
+    let histPos = -1;
+
+    function printLine(text, cls) {
+      const p = document.createElement('p');
+      p.classList.add('term-line');
+      if (cls) p.classList.add(cls);
+      p.textContent = text;
+      termOutput.appendChild(p);
+      termOutput.scrollTop = termOutput.scrollHeight;
+    }
+
+    const commands = {
+      help: () => [
+        'Commandes disponibles :',
+        '  whoami        — identité',
+        '  stats         — niveau & compétences',
+        '  missions      — projets réalisés',
+        '  arsenal       — outils & stack',
+        '  achievements  — certifications',
+        '  contact       — canaux de transmission',
+        '  sudo hire-me  — ???',
+        '  clear         — effacer le terminal'
+      ],
+      whoami: () => [
+        'ayman-nassef',
+        'Étudiant Ingénieur — Cybersécurité, ENSA Marrakech',
+        'Filière : Génie Cyber-Défense & Systèmes de Télécommunications Embarqués',
+      ],
+      stats: () => [
+        'LVL 2 — Cyber-Défense Engineer',
+        'Sécurité 80% | Systèmes 75% | Réseaux 70% | Programmation 55% | Outils 75%'
+      ],
+      missions: () => [
+        '[DONE][HARD]   Open-source SIEM :: Python',
+        '[DONE][MEDIUM] Supervision Réseau :: Zabbix',
+        '[DONE][MEDIUM] App Bancaire :: Tkinter',
+        '[DONE][HARD]   E-Sign :: Cryptographie'
+      ],
+      arsenal: () => [
+        'Sécurité: Zabbix, Splunk, Elastic',
+        'Systèmes: Linux (Kali/Ubuntu), Windows Server',
+        'Réseaux: TCP/IP, DHCP, SSH, DNS, HTTP',
+        'Outils: Nmap, Wireshark, Burp Suite'
+      ],
+      achievements: () => [
+        'TryHackMe: Pre Security, AI Security, Security 101, SOC Level 1',
+        'Root-Me: 1200+ pts (réseau / web / stéganographie)',
+        'Coursera: Foundations of Cybersecurity (Google)'
+      ],
+      contact: () => [
+        'mail   : aymannassef65@gmail.com',
+        'tel    : 07 06 62 21 47',
+        'linkedin/github/root-me : voir section TRANSMIT ci-dessous'
+      ],
+      clear: () => { termOutput.innerHTML = ''; return null; },
+      ls: () => ['stats/  missions/  arsenal/  achievements/  contact/  .ssh/  .secrets/'],
+      cat: () => ['Usage: cat <filename>', 'Try: cat .secrets/flag.txt'],
+      'cat .secrets/flag.txt': () => ['FLAG{y0u_f0und_th3_s3cr3t_fl4g}', 'Congratulations! +100 XP'],
+      pwd: () => ['/home/ayman-nassef'],
+      id: () => ['uid=1337(ayman) gid=1337(hackers) groups=1337(hackers),27(sudo)'],
+      uname: () => ['CYBERDEF_OS 6.1.0-kali9-amd64 #1 SMP x86_64 GNU/Linux'],
+      date: () => [new Date().toLocaleString('fr-FR')],
+      uptime: () => {
+        const mins = Math.floor((Date.now() - pageLoadTime) / 60000);
+        const secs = Math.floor(((Date.now() - pageLoadTime) % 60000) / 1000);
+        return ['up ' + mins + ' min ' + secs + ' sec, 1 user, load: 0.42 0.31 0.28'];
+      },
+    };
+    commands['sudo hire-me'] = () => [
+      'Permission accordée.',
+      'Ajout au pipeline de recrutement... FAIT.',
+      'Envoyez un message via la section TRANSMIT pour finaliser. :)'
+    ];
+    commands['ping'] = () => {
+      activateTerminalDots();
+      setTimeout(() => printLine('PING portfolio.local (127.0.0.1): 56 data bytes'), 200);
+      setTimeout(() => printLine('64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.042 ms'), 600);
+      setTimeout(() => printLine('64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.038 ms'), 1000);
+      setTimeout(() => printLine('64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.041 ms'), 1400);
+      setTimeout(() => printLine('--- portfolio.local ping statistics ---'), 1800);
+      setTimeout(() => printLine('3 packets transmitted, 3 received, 0% packet loss'), 2000);
+      setTimeout(() => deactivateTerminalDots(), 2100);
+      return null;
+    };
+
+    function runCommand(raw) {
+      const cmd = raw.trim().toLowerCase();
+      printLine('$ ' + raw, 'cmd');
+      if (cmd === '') return;
+      if (commands[cmd]) {
+        const out = commands[cmd]();
+        if (out) out.forEach(l => printLine(l));
+      } else {
+        printLine("commande introuvable : '" + raw + "' — tapez 'help'", 'err');
+      }
+    }
+
+    printLine("Bienvenue. Tapez 'help' pour la liste des commandes.");
+    termInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const val = termInput.value;
+        if (val.trim() !== '') { history.push(val); histPos = history.length; }
+        runCommand(val);
+        termInput.value = '';
+      } else if (e.key === 'ArrowUp') {
+        if (histPos > 0) { histPos--; termInput.value = history[histPos]; }
+        e.preventDefault();
+      } else if (e.key === 'ArrowDown') {
+        if (histPos < history.length - 1) { histPos++; termInput.value = history[histPos]; }
+        else { histPos = history.length; termInput.value = ''; }
+        e.preventDefault();
+      }
+    });
+
+    /* ================================================
+       NEW HACKING ANIMATIONS
+       ================================================ */
+
+    const pageLoadTime = Date.now();
+
+    /* ---------------- Terminal activity dots ---------------- */
+    function activateTerminalDots() {
+      document.querySelectorAll('.terminal-dot').forEach(d => d.classList.add('active'));
+    }
+    function deactivateTerminalDots() {
+      document.querySelectorAll('.terminal-dot').forEach(d => d.classList.remove('active'));
+    }
+
+    /* ---------------- Glitch screen flash ---------------- */
+    const glitchOverlay = document.getElementById('glitch-overlay');
+    function triggerGlitchFlash() {
+      if (reduceMotion) return;
+      glitchOverlay.classList.remove('flash');
+      void glitchOverlay.offsetWidth; // force reflow
+      glitchOverlay.classList.add('flash');
+    }
+
+    /* ---------------- Network node canvas ---------------- */
+    const netCanvas = document.getElementById('network-canvas');
+    const netCtx = netCanvas.getContext('2d');
+    const nodes = [];
+    const NODE_COUNT = 40;
+
+    function resizeNet() {
+      netCanvas.width = window.innerWidth;
+      netCanvas.height = window.innerHeight;
+    }
+    resizeNet();
+    window.addEventListener('resize', resizeNet);
+
+    for (let i = 0; i < NODE_COUNT; i++) {
+      nodes.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        r: Math.random() * 2 + 1
+      });
+    }
+
+    function drawNetwork() {
+      netCtx.clearRect(0, 0, netCanvas.width, netCanvas.height);
+
+      // Draw connections
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 200) {
+            netCtx.strokeStyle = `rgba(61,255,122,${(1 - dist / 200) * 0.5})`;
+            netCtx.lineWidth = 0.5;
+            netCtx.beginPath();
+            netCtx.moveTo(nodes[i].x, nodes[i].y);
+            netCtx.lineTo(nodes[j].x, nodes[j].y);
+            netCtx.stroke();
+          }
+        }
+      }
+
+      // Draw & update nodes
+      nodes.forEach(n => {
+        netCtx.fillStyle = '#3dff7a';
+        netCtx.beginPath();
+        netCtx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        netCtx.fill();
+
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < 0 || n.x > netCanvas.width) n.vx *= -1;
+        if (n.y < 0 || n.y > netCanvas.height) n.vy *= -1;
+      });
+
+      // Occasionally pulse a random node
+      if (Math.random() > 0.98) {
+        const n = nodes[Math.floor(Math.random() * nodes.length)];
+        netCtx.fillStyle = 'rgba(95,240,255,0.6)';
+        netCtx.beginPath();
+        netCtx.arc(n.x, n.y, 8, 0, Math.PI * 2);
+        netCtx.fill();
+      }
+
+      requestAnimationFrame(drawNetwork);
+    }
+    if (!reduceMotion) requestAnimationFrame(drawNetwork);
+
+    /* ---------------- Floating hacker particles ---------------- */
+    const particleChars = ['0', '1', '0x', 'FF', 'A3', '7E', 'SYN', 'ACK', 'RST', '>>>', '#!/', '0xDEAD', 'root', 'sudo', '$_', '{}', '&&', '||', '::'];
+
+    function spawnParticle() {
+      if (reduceMotion) return;
+      const el = document.createElement('div');
+      el.className = 'hacker-particle';
+      el.textContent = particleChars[Math.floor(Math.random() * particleChars.length)];
+      el.style.left = Math.random() * window.innerWidth + 'px';
+      el.style.top = (window.scrollY + window.innerHeight * 0.5 + Math.random() * window.innerHeight * 0.5) + 'px';
+      el.style.animationDuration = (8 + Math.random() * 12) + 's';
+      el.style.fontSize = (10 + Math.random() * 6) + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 20000);
+    }
+
+    /* ---------------- Threat HUD updater ---------------- */
+    const threatHud = document.getElementById('threat-hud');
+    const hudThreats = document.getElementById('hud-threats');
+    const hudUptime = document.getElementById('hud-uptime');
+    const hudPackets = document.getElementById('hud-packets');
+    let packetCount = 0;
+    let threatCount = 0;
+
+    function updateHUD() {
+      const elapsed = Date.now() - pageLoadTime;
+      const mins = Math.floor(elapsed / 60000).toString().padStart(2, '0');
+      const secs = Math.floor((elapsed % 60000) / 1000).toString().padStart(2, '0');
+      hudUptime.textContent = mins + ':' + secs;
+      packetCount += Math.floor(Math.random() * 5);
+      hudPackets.textContent = packetCount;
+
+      if (Math.random() > 0.95) {
+        threatCount++;
+        hudThreats.textContent = threatCount;
+        hudThreats.style.color = 'var(--magenta)';
+        setTimeout(() => hudThreats.style.color = '', 1000);
+      }
+    }
+
+    /* ---------------- Packet Sniffer animation ---------------- */
+    const packetSniffer = document.getElementById('packet-sniffer');
+    const protocols = ['TCP', 'UDP', 'ICMP', 'DNS', 'HTTP', 'TLS', 'SSH', 'ARP'];
+    const srcIPs = ['192.168.1.42', '10.0.0.13', '172.16.0.7', '192.168.1.1', '10.10.14.2'];
+    const dstIPs = ['8.8.8.8', '1.1.1.1', '93.184.216.34', '151.101.1.69', '104.16.132.229'];
+    const MAX_PACKET_LINES = 6;
+
+    function addPacketLine() {
+      if (reduceMotion) return;
+      const proto = protocols[Math.floor(Math.random() * protocols.length)];
+      const src = srcIPs[Math.floor(Math.random() * srcIPs.length)];
+      const dst = dstIPs[Math.floor(Math.random() * dstIPs.length)];
+      const port = Math.floor(Math.random() * 65535);
+      const size = Math.floor(Math.random() * 1500) + 40;
+
+      const line = document.createElement('div');
+      line.className = 'packet-line';
+      line.textContent = `[${proto}] ${src} → ${dst}:${port} (${size}B)`;
+      packetSniffer.appendChild(line);
+
+      while (packetSniffer.children.length > MAX_PACKET_LINES) {
+        packetSniffer.removeChild(packetSniffer.firstChild);
+      }
+    }
+
+    /* ---------------- Cursor trail effect ---------------- */
+    const trailDots = [];
+    const TRAIL_COUNT = 5;
+
+    for (let i = 0; i < TRAIL_COUNT; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'cursor-trail';
+      dot.style.opacity = (1 - i * 0.2).toString();
+      dot.style.width = (4 - i * 0.5) + 'px';
+      dot.style.height = (4 - i * 0.5) + 'px';
+      document.body.appendChild(dot);
+      trailDots.push({ el: dot, x: 0, y: 0 });
+    }
+
+    let mouseX = 0, mouseY = 0;
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function animateTrail() {
+      if (reduceMotion) return;
+      let prevX = mouseX, prevY = mouseY;
+      trailDots.forEach((dot, i) => {
+        const speed = 0.3 - i * 0.04;
+        dot.x += (prevX - dot.x) * speed;
+        dot.y += (prevY - dot.y) * speed;
+        dot.el.style.left = dot.x + 'px';
+        dot.el.style.top = dot.y + 'px';
+        prevX = dot.x;
+        prevY = dot.y;
+      });
+      requestAnimationFrame(animateTrail);
+    }
+    if (!reduceMotion) requestAnimationFrame(animateTrail);
+
+    /* ---------------- Active nav link tracking ---------------- */
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    function updateActiveNav() {
+      let currentSection = '';
+      sections.forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top <= window.innerHeight / 3) {
+          currentSection = sec.id;
+        }
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + currentSection);
+      });
+    }
+    window.addEventListener('scroll', updateActiveNav);
+
+    /* ---------------- Start all hacking animations ---------------- */
+    function startHackingAnimations() {
+      if (reduceMotion) return;
+
+      // Show HUD and sniffer
+      setTimeout(() => {
+        threatHud.classList.add('visible');
+        packetSniffer.classList.add('visible');
+      }, 1000);
+
+      // Particle spawner
+      setInterval(spawnParticle, 1500);
+
+      // HUD updater
+      setInterval(updateHUD, 1000);
+
+      // Packet sniffer
+      setInterval(addPacketLine, 2000);
+
+      // Random glitch flashes (rare, subtle)
+      setInterval(() => {
+        if (Math.random() > 0.92) triggerGlitchFlash();
+      }, 15000);
+    }
+
+    /* ---------------- Konami code — BREACH MODE ---------------- */
+    const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let kBuffer = [];
+    const toast = document.getElementById('toast');
+    const breachOverlay = document.getElementById('breach-overlay');
+
+    window.addEventListener('keydown', (e) => {
+      kBuffer.push(e.key);
+      kBuffer = kBuffer.slice(-konami.length);
+      if (kBuffer.join(',') === konami.join(',')) {
+        // Full breach animation
+        breachOverlay.classList.add('active');
+        document.body.style.animation = 'none';
+
+        // Intense glitch
+        let flashCount = 0;
+        const flashInterval = setInterval(() => {
+          triggerGlitchFlash();
+          flashCount++;
+          if (flashCount > 10) clearInterval(flashInterval);
+        }, 150);
+
+        // Dismiss breach after 4s
+        setTimeout(() => {
+          breachOverlay.classList.remove('active');
+          toast.textContent = 'CHEAT CODE ACTIVATED :: +999 XP — SYSTEM RESTORED';
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 3200);
+        }, 4000);
+      }
+    });
+  </script>
+
+</body>
+
+</html>
