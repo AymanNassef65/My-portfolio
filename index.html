@@ -7,6 +7,14 @@
   <title>Ayman Nassef :: root@portfolio</title>
   <meta name="description"
     content="Ayman Nassef — Étudiant Ingénieur Cybersécurité, ENSA Marrakech. Portfolio interactif.">
+  <meta name="theme-color" content="#060a08">
+  <meta property="og:title" content="Ayman Nassef :: root@portfolio">
+  <meta property="og:description"
+    content="Ayman Nassef — Étudiant Ingénieur Cybersécurité, ENSA Marrakech. Portfolio interactif.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -2167,6 +2175,7 @@
       ls: () => ['stats/  missions/  arsenal/  achievements/  contact/  .ssh/  .secrets/'],
       cat: () => ['Usage: cat <filename>', 'Try: cat .secrets/flag.txt'],
       'cat .secrets/flag.txt': () => ['FLAG{y0u_f0und_th3_s3cr3t_fl4g}', 'Congratulations! +100 XP'],
+      'cat .ssh/id_rsa': () => ['Permission refusée. Même en simulation, on ne touche pas aux clés. :)'],
       pwd: () => ['/home/ayman-nassef'],
       id: () => ['uid=1337(ayman) gid=1337(hackers) groups=1337(hackers),27(sudo)'],
       uname: () => ['CYBERDEF_OS 6.1.0-kali9-amd64 #1 SMP x86_64 GNU/Linux'],
@@ -2474,12 +2483,14 @@
         document.body.style.animation = 'none';
 
         // Intense glitch
-        let flashCount = 0;
-        const flashInterval = setInterval(() => {
-          triggerGlitchFlash();
-          flashCount++;
-          if (flashCount > 10) clearInterval(flashInterval);
-        }, 150);
+        if (!reduceMotion) {
+          let flashCount = 0;
+          const flashInterval = setInterval(() => {
+            triggerGlitchFlash();
+            flashCount++;
+            if (flashCount > 10) clearInterval(flashInterval);
+          }, 150);
+        }
 
         // Dismiss breach after 4s
         setTimeout(() => {
